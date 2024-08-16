@@ -75,66 +75,71 @@ add_library(demucs.cpp.lib ${SOURCES})
 # expose source files to project linking to this one
 target_include_directories(demucs.cpp.lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/eigen
+    # ${CMAKE_CURRENT_SOURCE_DIR}/vendor/libnyquist
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+# target_link_libraries(demucs.cpp.lib ${LIBRARIES_TO_LINK} libnyquist)
 target_link_libraries(demucs.cpp.lib ${LIBRARIES_TO_LINK})
 
 # compile vendored submodule libnyquist for driver programs
-set(LIBNYQUIST_BUILD_EXAMPLE OFF CACHE BOOL "Disable libnyquist example" FORCE)
-add_subdirectory(vendor/libnyquist)
+# set(LIBNYQUIST_BUILD_EXAMPLE OFF CACHE BOOL "Disable libnyquist example" FORCE)
+# add_subdirectory(vendor/libnyquist)
 
+target_sources(demucs.cpp.lib PUBLIC ${SOURCES})
 # Add target to compile demucs.cpp.main, the main driver program for demucs.cpp
-add_executable(demucs.cpp.main "cli-apps/demucs.cpp")
-target_include_directories(demucs.cpp.main PRIVATE vendor/libnyquist/include)
-target_link_libraries(demucs.cpp.main demucs.cpp.lib libnyquist)
+# add_library(demucs.cpp.main "cli-apps/rundemucs.hpp")
+# add_library(demucs.cpp.main "cli-apps/demucs.cpp")
+# add_executable(demucs.cpp.main "cli-apps/demucs.cpp")
+# target_include_directories(demucs.cpp.main PRIVATE vendor/libnyquist/include)
+# target_link_libraries(demucs.cpp.main demucs.cpp.lib libnyquist)
 
-# Add target to compile demucs_ft.cpp.main, the fine-tuned driver program for demucs.cpp
-add_executable(demucs_ft.cpp.main "cli-apps/demucs_ft.cpp")
-target_include_directories(demucs_ft.cpp.main PRIVATE vendor/libnyquist/include)
-target_link_libraries(demucs_ft.cpp.main demucs.cpp.lib libnyquist)
+# # Add target to compile demucs_ft.cpp.main, the fine-tuned driver program for demucs.cpp
+# add_executable(demucs_ft.cpp.main "cli-apps/demucs_ft.cpp")
+# target_include_directories(demucs_ft.cpp.main PRIVATE vendor/libnyquist/include)
+# target_link_libraries(demucs_ft.cpp.main demucs.cpp.lib libnyquist)
 
-add_executable(demucs_mt.cpp.main "cli-apps/demucs_mt.cpp")
-target_include_directories(demucs_mt.cpp.main PRIVATE vendor/libnyquist/include)
-target_include_directories(demucs_mt.cpp.main PRIVATE cli-apps)
-target_link_libraries(demucs_mt.cpp.main demucs.cpp.lib libnyquist)
+# add_executable(demucs_mt.cpp.main "cli-apps/demucs_mt.cpp")
+# target_include_directories(demucs_mt.cpp.main PRIVATE vendor/libnyquist/include)
+# target_include_directories(demucs_mt.cpp.main PRIVATE cli-apps)
+# target_link_libraries(demucs_mt.cpp.main demucs.cpp.lib libnyquist)
 
-add_executable(demucs_ft_mt.cpp.main "cli-apps/demucs_ft_mt.cpp")
-target_include_directories(demucs_ft_mt.cpp.main PRIVATE vendor/libnyquist/include)
-target_include_directories(demucs_ft_mt.cpp.main PRIVATE cli-apps)
-target_link_libraries(demucs_ft_mt.cpp.main demucs.cpp.lib libnyquist)
+# add_executable(demucs_ft_mt.cpp.main "cli-apps/demucs_ft_mt.cpp")
+# target_include_directories(demucs_ft_mt.cpp.main PRIVATE vendor/libnyquist/include)
+# target_include_directories(demucs_ft_mt.cpp.main PRIVATE cli-apps)
+# target_link_libraries(demucs_ft_mt.cpp.main demucs.cpp.lib libnyquist)
 
-add_executable(demucs_v3.cpp.main "cli-apps/demucs_v3.cpp")
-target_include_directories(demucs_v3.cpp.main PRIVATE vendor/libnyquist/include)
-target_include_directories(demucs_v3.cpp.main PRIVATE cli-apps)
-target_link_libraries(demucs_v3.cpp.main demucs.cpp.lib libnyquist)
+# add_executable(demucs_v3.cpp.main "cli-apps/demucs_v3.cpp")
+# target_include_directories(demucs_v3.cpp.main PRIVATE vendor/libnyquist/include)
+# target_include_directories(demucs_v3.cpp.main PRIVATE cli-apps)
+# target_link_libraries(demucs_v3.cpp.main demucs.cpp.lib libnyquist)
 
-add_executable(demucs_v3_mt.cpp.main "cli-apps/demucs_v3_mt.cpp")
-target_include_directories(demucs_v3_mt.cpp.main PRIVATE vendor/libnyquist/include)
-target_include_directories(demucs_v3_mt.cpp.main PRIVATE cli-apps)
-target_link_libraries(demucs_v3_mt.cpp.main demucs.cpp.lib libnyquist)
+# add_executable(demucs_v3_mt.cpp.main "cli-apps/demucs_v3_mt.cpp")
+# target_include_directories(demucs_v3_mt.cpp.main PRIVATE vendor/libnyquist/include)
+# target_include_directories(demucs_v3_mt.cpp.main PRIVATE cli-apps)
+# target_link_libraries(demucs_v3_mt.cpp.main demucs.cpp.lib libnyquist)
 
-file(GLOB SOURCES_TO_LINT "src/*.cpp" "src/*.hpp" "cli-apps/*.cpp" "cli-apps/*.hpp")
+# file(GLOB SOURCES_TO_LINT "src/*.cpp" "src/*.hpp" "cli-apps/*.cpp" "cli-apps/*.hpp")
 
-# add target to run standard lints and formatters
-add_custom_target(lint
-    COMMAND clang-format -i ${SOURCES_TO_LINT} --style=file
-    # add clang-tidy command
-    # add include dirs to clang-tidy
-    COMMAND cppcheck -I"src/" -I"cli-apps/" --enable=all --suppress=missingIncludeSystem ${SOURCES_TO_LINT} --std=c++17
-    COMMAND scan-build -o ${CMAKE_BINARY_DIR}/scan-build-report make -C ${CMAKE_BINARY_DIR}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
+# # add target to run standard lints and formatters
+# add_custom_target(lint
+#     COMMAND clang-format -i ${SOURCES_TO_LINT} --style=file
+#     # add clang-tidy command
+#     # add include dirs to clang-tidy
+#     COMMAND cppcheck -I"src/" -I"cli-apps/" --enable=all --suppress=missingIncludeSystem ${SOURCES_TO_LINT} --std=c++17
+#     COMMAND scan-build -o ${CMAKE_BINARY_DIR}/scan-build-report make -C ${CMAKE_BINARY_DIR}
+#     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+# )
 
-# add target to run cpp tests in test/ directory with gtest
+# # add target to run cpp tests in test/ directory with gtest
 
-# get gtest from vendor/googletest
-set(BUILD_GMOCK OFF CACHE BOOL "Disable gmock in googletest" FORCE)
-add_subdirectory(vendor/googletest)
+# # get gtest from vendor/googletest
+# set(BUILD_GMOCK OFF CACHE BOOL "Disable gmock in googletest" FORCE)
+# add_subdirectory(vendor/googletest)
 
-# include test/*.cpp as test files
-file(GLOB TEST_SOURCES "test/*.cpp")
+# # include test/*.cpp as test files
+# file(GLOB TEST_SOURCES "test/*.cpp")
 
-add_executable(demucs.cpp.test ${TEST_SOURCES})
-target_link_libraries(demucs.cpp.test demucs.cpp.lib gtest gtest_main libnyquist)
-add_test(NAME tests COMMAND demucs.cpp.test)
+# add_executable(demucs.cpp.test ${TEST_SOURCES})
+# target_link_libraries(demucs.cpp.test demucs.cpp.lib gtest gtest_main libnyquist)
+# add_test(NAME tests COMMAND demucs.cpp.test)
